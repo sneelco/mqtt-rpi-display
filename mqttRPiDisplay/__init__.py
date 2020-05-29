@@ -9,7 +9,7 @@ class RPiDisplay:
         self.display = display
         self.name = name
         self.track = False
-        self.brightness = self.brightness()
+        self.brightness = self.get_brightness()
 
         self.mqtt = mqtt.Client(self.name)
         self.mqtt.connect(host, port=port)
