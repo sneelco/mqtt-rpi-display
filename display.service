@@ -1,0 +1,12 @@
+[Unit]
+Description=RPI Display Manager
+After=network.target
+
+[Service]
+User=root
+EnvironmentFile=/usr/local/etc/display
+ExecStart=/usr/local/bin/display.py -n ${DISPLAY_NAME} -H ${MQTT_HOST}
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
