@@ -66,6 +66,7 @@ class RPiDisplay:
     def _on_connect(self, *_) -> None:
         _LOG.info('Connection to MQTT has been established')
         self.mqtt.publish(self.will_topic, "online", retain=True)
+        self._subscribe()
 
     @staticmethod
     def _on_disconnect(*_) -> None:
@@ -180,7 +181,6 @@ class RPiDisplay:
         _LOG.info("Starting up...")
         self.track = True
         self._connect()
-        self._subscribe()
 
         loop = asyncio.get_event_loop()
         loop.create_task(self.track_brightness())

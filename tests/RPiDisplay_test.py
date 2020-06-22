@@ -187,10 +187,14 @@ class RPiDisplayTest(TestCase):
             self.test_instance.mqtt.loop_start.assert_called()
 
     def test_on_connect(self):
+        mock_subscribe = self.test_instance._subscribe = MagicMock()
         self.test_instance._on_connect()
 
         with self.subTest("Published to will topic"):
             self.test_instance.mqtt.publish.assert_called_with(self.test_instance.will_topic, 'online', retain=True)
+
+        with self.subTest("_subscribe is called"):
+            mock_subscribe.assert_called()
 
     def test_on_disconnect(self):
         self.test_instance._on_disconnect()
@@ -208,7 +212,6 @@ class RPiDisplayTest(TestCase):
         mock_loop = mock_get_event_loop.return_value = MagicMock()
 
         mock_connect = self.test_instance._connect = MagicMock()
-        mock_subscribe = self.test_instance._subscribe = MagicMock()
 
         mock_track_brightness = self.test_instance.track_brightness = MagicMock()
         mock_track_xinput = self.test_instance.track_xinput = MagicMock()
@@ -223,9 +226,6 @@ class RPiDisplayTest(TestCase):
 
         with self.subTest("_connect is called"):
             mock_connect.assert_called()
-
-        with self.subTest("_subscribe is called"):
-            mock_subscribe.assert_called()
 
         with self.subTest("Task created for track_brightness"):
             mock_loop.create_task.assert_has_calls(mock_track_brightness())
